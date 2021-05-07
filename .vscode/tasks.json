@@ -1,0 +1,34 @@
+{
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "Build with g++",
+			"command": "g++",
+			"args": [
+				"-g",
+				"src/*.cpp",
+
+				"-o",
+				"build/cgol",
+
+				"-Idependencies/include",
+				"-Ldependencies/lib",
+
+				"-lmingw32",
+				"-lSDL2main",
+				"-lSDL2"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+	],
+  "version": "2.0.0"
+}
