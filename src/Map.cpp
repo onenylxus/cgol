@@ -55,18 +55,22 @@ void Map::setOffset(Direction dir) {
   switch (dir) {
     case Direction::topMiddle:
       this->offsetY--;
+      this->expand(this->offsetY < 0, false, false, false);
       break;
 
     case Direction::bottomMiddle:
       this->offsetY++;
+      this->expand(false, this->offsetY + WINDOW_HEIGHT / CELL_SIZE >= this->height, false, false);
       break;
 
     case Direction::middleLeft:
       this->offsetX--;
+      this->expand(false, false, this->offsetX < 0, false);
       break;
 
     case Direction::middleRight:
       this->offsetX++;
+      this->expand(false, false, false, this->offsetX + WINDOW_WIDTH / CELL_SIZE >= this->height);
       break;
   }
   std::cout << "Offset: (" << this->offsetX << ", " << this->offsetY << ")" << std::endl;
@@ -151,6 +155,7 @@ void Map::expand(bool top, bool bottom, bool left, bool right) {
   if (top) {
     std::vector<Cell *> data;
     this->height++;
+    this->offsetY++;
 
     int ptr = 0;
     for (int i = 0; i < this->width * this->height; i++) {
@@ -175,6 +180,7 @@ void Map::expand(bool top, bool bottom, bool left, bool right) {
   if (left) {
     std::vector<Cell *> data;
     this->width++;
+    this->offsetX++;
 
     int ptr = 0;
     for (int i = 0; i < this->width * this->height; i++) {
@@ -258,11 +264,14 @@ void Map::toggleCell(int x, int y) {
   int u = x / CELL_SIZE + this->offsetX;
   int v = y / CELL_SIZE + this->offsetY;
 
+  std::cout << "Toggle position: (" << u << ", " << v << ")" << std::endl;
+  std::cout << "Dimensions: " << this->width << "x" << this->height << std::endl;
+
   // Skip bad positions
-  if (u < 0 || u >= fmin(this->width, this->offsetX + WINDOW_WIDTH / CELL_SIZE)) {
+  if (u < 0 || u >= this->width) {
     return;
   }
-  if (v < 0 || v >= fmin(this->height, this->offsetY + WINDOW_HEIGHT / CELL_SIZE)) {
+  if (v < 0 || v >= this->height) {
     return;
   }
 
