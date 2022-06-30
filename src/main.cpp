@@ -8,10 +8,22 @@
 // Main function
 int main(int argv, char **args) {
   // Construct
-  SDL_Init(SDL_INIT_EVERYTHING);
+  if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
+    std::cout << "Error: SDL failed to initialize\nSDL Error: " << SDL_GetError() << std::endl;
+    return 1;
+  }
 
-  SDL_Window *window = SDL_CreateWindow("cgol", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
+  SDL_Window *window = SDL_CreateWindow("Conway's Game of Life", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
+  if (!window) {
+    std::cout << "Error: Failed to open window\nSDL Error: " << SDL_GetError() << std::endl;
+    return 1;
+  }
+
   SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, 0);
+  if (!renderer) {
+    std::cout << "Error: Failed to create renderer\nSDL Error: " << SDL_GetError() << std::endl;
+    return 1;
+  }
   SDL_Event event;
 
   bool isRunning = true;
